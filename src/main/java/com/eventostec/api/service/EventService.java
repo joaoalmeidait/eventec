@@ -6,6 +6,7 @@ import com.eventostec.api.domain.event.Event;
 import com.eventostec.api.domain.event.EventDetailsDTO;
 import com.eventostec.api.domain.event.EventRequestDTO;
 import com.eventostec.api.domain.event.EventResponseDTO;
+import com.eventostec.api.exception.ResourceNotFoundException;
 import com.eventostec.api.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -135,7 +136,7 @@ public class EventService {
 
     public EventDetailsDTO getEventByID(UUID id) {
         Event event = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
 
         List<Coupon> coupons = couponService.consultCoupons(id, new Date());
 
@@ -156,5 +157,12 @@ public class EventService {
                 event.getImgUrl(),
                 couponDTOs
                 );
+    }
+
+    public void deleteEventById(UUID id) {
+        Event event = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+
+        repository.deleteById(id);
     }
 }
