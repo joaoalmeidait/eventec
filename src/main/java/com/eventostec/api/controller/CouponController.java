@@ -16,7 +16,7 @@ public class CouponController {
     @Autowired
     private CouponService couponService;
 
-    @PostMapping
+    @PostMapping("/{eventID}")
     public ResponseEntity<Coupon> addCouponsToEvent(@PathVariable UUID eventID, @RequestBody CouponRequestDTO data){
         Coupon coupons = couponService.addCouponToEvent(eventID, data);
         return ResponseEntity.ok(coupons);
