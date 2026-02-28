@@ -23,7 +23,7 @@ public class EventController {
     private EventService eventService;
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Event> create(
+    public ResponseEntity<EventResponseDTO> create(
             @RequestParam("title") String title,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("date") Long date,
@@ -40,12 +40,12 @@ public class EventController {
                 date,
                 city,
                 uf,
-                remote,
                 eventUrl,
-                image
+                image,
+                remote
         );
 
-        Event newEvent = this.eventService.createEvent(eventRequestDTO);
+        EventResponseDTO newEvent = this.eventService.createEvent(eventRequestDTO);
         return ResponseEntity.ok(newEvent);
     }
 
@@ -57,28 +57,26 @@ public class EventController {
 
     @GetMapping("/filter")
     public ResponseEntity<List<EventResponseDTO>> filterEvents(
-                            @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "10") int size,
-                            @RequestParam("title") String title,
-                            @RequestParam("city") String city,
-                            @RequestParam("uf") String uf,
-                            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam("title") String title,
+            @RequestParam("city") String city,
+            @RequestParam("uf") String uf,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
     ) {
         List<EventResponseDTO> events = eventService.getFilteredEvents(page, size, title, city, uf, startDate, endDate);
         return ResponseEntity.ok(events);
-
-
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventDetailsDTO> getEventByID(@PathVariable UUID id){
+    public ResponseEntity<EventDetailsDTO> getEventByID(@PathVariable UUID id) {
         EventDetailsDTO responseDTO = eventService.getEventByID(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEventByID(@PathVariable UUID id){
+    public ResponseEntity<Void> deleteEventByID(@PathVariable UUID id) {
         eventService.deleteEventById(id);
         return ResponseEntity.noContent().build();
     }
