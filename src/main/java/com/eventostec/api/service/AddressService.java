@@ -6,7 +6,6 @@ import com.eventostec.api.domain.event.EventRequestDTO;
 import com.eventostec.api.repositories.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.events.EventException;
 
 @Service
 public class AddressService {
@@ -17,8 +16,10 @@ public class AddressService {
     public Address createAddress(EventRequestDTO data, Event event){
         Address address = new Address();
         address.setCity(data.city());
-        address.setUf(data.state());
+        address.setUf(data.uf());
         address.setEvent(event);
+
+        event.setAddress(address);
 
         return addressRepository.save(address);
     }

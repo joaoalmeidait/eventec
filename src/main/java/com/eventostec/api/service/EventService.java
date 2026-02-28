@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -42,7 +41,7 @@ public class EventService {
     @Value("${aws.bucket.name}")
     private String bucketName;
 
-    public Event cerateEvent(EventRequestDTO data){
+    public Event createEvent(EventRequestDTO data){
         String imgUrl = null;
 
         if (data.image() != null){
