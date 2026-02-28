@@ -3,8 +3,8 @@
   --paper: #f2f6fb;
   --card: #ffffff;
   --line: #d2deed;
-  --brand: #078891;
-  --brand-dark: #054145;
+  --brand: #0055ff;
+  --brand-dark: #022263;
   --accent: #ff8b3d;
 }
 
@@ -27,9 +27,8 @@ body {
 .hero {
   padding: 32px 0 48px;
   color: #fff;
-  background: linear-gradient(115deg, #078891 0%);
-  border-bottom-left-radius: 28px;
-  border-bottom-right-radius: 28px;
+  background: linear-gradient(115deg, #0055ff 0%);
+
 }
 
 .hero-content {
