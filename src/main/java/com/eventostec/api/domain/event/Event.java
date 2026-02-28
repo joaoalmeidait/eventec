@@ -1,6 +1,7 @@
 package com.eventostec.api.domain.event;
 
 import com.eventostec.api.domain.address.Address;
+import com.eventostec.api.domain.coupon.Coupon;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,5 +31,8 @@ public class Event {
 
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
     private Address address;
+
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
+    private Coupon coupons;
 
 }

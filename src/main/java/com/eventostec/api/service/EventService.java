@@ -1,7 +1,9 @@
 package com.eventostec.api.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.eventostec.api.domain.coupon.Coupon;
 import com.eventostec.api.domain.event.Event;
+import com.eventostec.api.domain.event.EventDetailsDTO;
 import com.eventostec.api.domain.event.EventRequestDTO;
 import com.eventostec.api.domain.event.EventResponseDTO;
 import com.eventostec.api.repositories.EventRepository;
@@ -18,10 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -34,6 +34,9 @@ public class EventService {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private CouponService couponService;
 
     @Value("${aws.bucket.name}")
     private String bucketName;
@@ -128,5 +131,30 @@ public class EventService {
                 event.getEventUrl(),
                 event.getImgUrl()
         )).stream().toList();
+    }
+
+    public EventDetailsDTO getEventByID(UUID id) {
+        Event event = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        List<Coupon> coupons = couponService.consultCoupons(id, new Date());
+
+        List<EventDetailsDTO.CouponDTO> couponDTOs = coupons.stream()
+                .map(coupon -> new EventDetailsDTO.CouponDTO(
+                        coupon.getCode(),
+                        coupon.getDiscount(),
+                        coupon.getValid()
+                )).toList();
+
+        return new EventDetailsDTO(event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                event.getAddress().getCity(),
+                event.getAddress().getUf(),
+                event.getEventUrl(),
+                event.getImgUrl(),
+                couponDTOs
+                );
     }
 }

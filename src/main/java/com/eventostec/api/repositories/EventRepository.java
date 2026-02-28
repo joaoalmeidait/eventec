@@ -1,5 +1,6 @@
 package com.eventostec.api.repositories;
 
+import com.eventostec.api.domain.coupon.Coupon;
 import com.eventostec.api.domain.event.Event;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,5 +32,6 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
                                           @Param("startDate") Date startDate,
                                           @Param("endDate") Date endDate,
                                           Pageable pageable);
+
 
 }

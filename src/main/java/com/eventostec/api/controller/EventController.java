@@ -1,6 +1,7 @@
 package com.eventostec.api.controller;
 
 import com.eventostec.api.domain.event.Event;
+import com.eventostec.api.domain.event.EventDetailsDTO;
 import com.eventostec.api.domain.event.EventRequestDTO;
 import com.eventostec.api.domain.event.EventResponseDTO;
 import com.eventostec.api.service.EventService;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/event")
@@ -68,6 +70,12 @@ public class EventController {
         return ResponseEntity.ok(events);
 
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EventDetailsDTO> getEventByID(@PathVariable UUID id){
+        EventDetailsDTO responseDTO = eventService.getEventByID(id);
+        return ResponseEntity.ok(responseDTO);
     }
 
 
