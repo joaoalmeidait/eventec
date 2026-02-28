@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EventosTec</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-content">
+      <div>
+        <p class="eyebrow">Agenda de tecnologia</p>
+        <h1>Encontre os proximos eventos</h1>
+        <p class="subtitle">Lista consumida em tempo real da API.</p>
+      </div>
+      <div class="stats">
+        <div class="stat-box">
+          <span>Total exibido</span>
+          <strong id="eventsCount">0</strong>
+        </div>
+        <div class="stat-box">
+          <span>Pagina atual</span>
+          <strong id="currentPage">1</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <div class="filters-header">
+        <h2>Filtros</h2>
+        <p>Use os campos abaixo para refinar os resultados.</p>
+      </div>
+      <form id="filtersForm" class="filters-grid">
+        <label>
+          Titulo
+          <input id="title" type="text" placeholder="Ex: Java, IA, Cloud">
+        </label>
+        <label>
+          Cidade
+          <input id="city" type="text" placeholder="Ex: Sao Paulo">
+        </label>
+        <label>
+          UF
+          <input id="uf" type="text" placeholder="Ex: SP">
+        </label>
+        <label>
+          Inicio
+          <input id="startDate" type="date">
+        </label>
+        <label>
+          Fim
+          <input id="endDate" type="date">
+        </label>
+        <label>
+          Por pagina
+          <input id="size" type="number" min="1" max="30" value="9">
+        </label>
+        <div class="actions">
+          <button type="submit">Aplicar filtros</button>
+          <button type="button" id="clearFilters" class="ghost">Limpar</button>
+        </div>
+      </form>
+      <p id="statusLine" class="status">Carregando eventos...</p>
+    </section>
+
+    <section>
+      <div class="top-actions panel">
+        <div class="search-id">
+          <label for="searchEventId">Buscar por ID</label>
+          <div class="search-row">
+            <input id="searchEventId" type="text" placeholder="UUID do evento">
+            <button id="searchByIdBtn" type="button">Buscar evento</button>
+          </div>
+        </div>
+        <div class="create-cta">
+          <p>Quer publicar um novo evento?</p>
+          <button id="openCreateModal" type="button">Criar evento</button>
+        </div>
+      </div>
+
+      <div id="eventsGrid" class="events-grid"></div>
+      <div id="emptyState" class="empty-state hidden">
+        <h3>Nenhum evento encontrado</h3>
+        <p>Ajuste os filtros ou tente outra pagina.</p>
+      </div>
+      <div class="pagination">
+        <button id="prevPage" type="button" class="ghost">Pagina anterior</button>
+        <button id="nextPage" type="button">Proxima pagina</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="detailsModal">
+    <article>
+      <header>
+        <h3 id="modalTitle">Detalhes do evento</h3>
+        <button id="closeModal" type="button" class="ghost">Fechar</button>
+      </header>
+      <div id="modalBody"></div>
+    </article>
+  </dialog>
+
+  <dialog id="createModal">
+    <article>
+      <header>
+        <h3>Novo evento</h3>
+        <button id="closeCreateModal" type="button" class="ghost">Fechar</button>
+      </header>
+      <form id="createEventForm" class="create-form">
+        <label>
+          Titulo
+          <input id="createTitle" type="text" required>
+        </label>
+        <label>
+          Descricao
+          <input id="createDescription" type="text">
+        </label>
+        <label>
+          Data e hora
+          <input id="createDate" type="datetime-local" required>
+        </label>
+        <label>
+          URL do evento
+          <input id="createUrl" type="url" required>
+        </label>
+        <label>
+          Evento remoto
+          <input id="createRemote" type="checkbox">
+        </label>
+        <div class="address-row">
+          <label>
+            Cidade
+            <input id="createCity" type="text" placeholder="Ex: Sao Paulo">
+          </label>
+          <label>
+            UF
+            <input id="createUf" type="text" placeholder="Ex: SP">
+          </label>
+        </div>
+        <label>
+          Imagem
+          <input id="createImage" type="file" accept="image/*">
+        </label>
+        <button type="submit">Salvar evento</button>
+      </form>
+    </article>
+  </dialog>
+
+  <script src="/app.js"></script>
+</body>
+</html>
