@@ -28,4 +28,10 @@ public class Address {
     @JoinColumn(name = "event_id")
     @JsonIgnore
     private Event event;
+
+    public Address (String city, String uf, Event event){
+        this.setCity(city);
+        this.setUf(uf);
+        this.setEvent(event);
+    }
 }

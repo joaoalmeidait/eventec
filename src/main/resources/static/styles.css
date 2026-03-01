@@ -334,6 +334,33 @@ input[type="checkbox"] {
   margin: 6px 0;
 }
 
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  min-width: 260px;
+  max-width: 420px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: #fff;
+  background: #1f7a3f;
+  box-shadow: 0 12px 28px rgba(20, 28, 47, 0.28);
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: opacity 160ms ease, transform 160ms ease;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.error {
+  background: #a02626;
+}
+
 @media (max-width: 740px) {
   .stats {
     width: 100%;
@@ -352,5 +379,11 @@ input[type="checkbox"] {
 
   .address-row {
     grid-template-columns: 1fr;
+  }
+
+  .toast {
+    left: 16px;
+    right: 16px;
+    max-width: none;
   }
 }
