@@ -26,6 +26,7 @@ const elements = {
   closeCreateModal: document.getElementById("closeCreateModal"),
   createEventForm: document.getElementById("createEventForm"),
   toast: document.getElementById("toast"),
+  createUrl: document.getElementById("createUrl"),
   createRemote: document.getElementById("createRemote"),
   createCity: document.getElementById("createCity"),
   createUf: document.getElementById("createUf")
@@ -84,6 +85,34 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function normalizeExternalUrl(rawUrl) {
+  const value = String(rawUrl ?? "").trim();
+  if (!value) {
+    return "#";
+  }
+
+  // Handles legacy values persisted as same-origin + "/www.site.com".
+  try {
+    const parsed = new URL(value, window.location.origin);
+    if (parsed.origin === window.location.origin) {
+      const path = parsed.pathname.replace(/^\/+/, "");
+      if (path.startsWith("www.")) {
+        return `https://${path}`;
+      }
+    }
+  } catch (_) {
+    // Falls back to string normalization below.
+  }
+
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    return value;
+  }
+  if (value.startsWith("//")) {
+    return `https:${value}`;
+  }
+  return `https://${value}`;
+}
+
 function getCurrentFilters() {
   return {
     title: document.getElementById("title").value.trim(),
@@ -115,7 +144,7 @@ function renderEvents() {
         ? `<img class="event-banner" src="${escapeHtml(event.imgUrl)}" alt="Imagem do evento ${escapeHtml(event.title)}">`
         : `<div class="event-banner"></div>`;
       const place = event.remote ? "Remoto" : `${event.city || "-"} - ${event.state || event.uf || "-"}`;
-      const safeUrl = escapeHtml(event.eventUrl || "#");
+      const safeUrl = escapeHtml(normalizeExternalUrl(event.eventUrl));
       return `
         <article class="event-card">
           ${image}
@@ -227,7 +256,7 @@ async function openDetails(eventId) {
       <p><strong>Data:</strong> ${escapeHtml(formatDate(data.date))}</p>
       <p><strong>Local:</strong> ${escapeHtml(location)}</p>
       <p><strong>Descricao:</strong> ${escapeHtml(data.description || "Sem descricao.")}</p>
-      <p><a href="${escapeHtml(data.eventUrl || "#")}" target="_blank" rel="noopener noreferrer">Abrir pagina do evento</a></p>
+      <p><a href="${escapeHtml(normalizeExternalUrl(data.eventUrl))}" target="_blank" rel="noopener noreferrer">Abrir pagina do evento</a></p>
       <h4>Cupons</h4>
       ${couponMarkup}
     `;
@@ -261,7 +290,7 @@ async function createEvent(event) {
     formData.append("city", isRemote ? "" : elements.createCity.value.trim());
     formData.append("uf", isRemote ? "" : elements.createUf.value.trim());
     formData.append("remote", String(isRemote));
-    formData.append("eventUrl", document.getElementById("createUrl").value.trim());
+    formData.append("eventUrl", normalizeExternalUrl(document.getElementById("createUrl").value));
 
     const imageInput = document.getElementById("createImage");
     if (imageInput.files && imageInput.files[0]) {
@@ -329,6 +358,9 @@ elements.closeCreateModal.addEventListener("click", () => {
 });
 
 elements.createRemote.addEventListener("change", toggleAddressInputs);
+elements.createUrl.addEventListener("blur", () => {
+  elements.createUrl.value = normalizeExternalUrl(elements.createUrl.value);
+});
 elements.createEventForm.addEventListener("submit", createEvent);
 
 window.addEventListener("click", (event) => {
