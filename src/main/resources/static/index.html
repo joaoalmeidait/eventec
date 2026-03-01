@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EventosTec</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="/fav.png">
 </head>
 <body>
   <header class="hero">
@@ -12,7 +13,7 @@
       <div>
         <p class="eyebrow">Agenda de tecnologia</p>
         <h1>Encontre os proximos eventos</h1>
-        <p class="subtitle">Lista consumida em tempo real da API.</p>
+    
       </div>
       <div class="stats">
         <div class="stat-box">
@@ -124,7 +125,7 @@
         </label>
         <label>
           URL do evento
-          <input id="createUrl" type="url" required>
+          <input id="createUrl" type="text" required>
         </label>
         <label>
           Evento remoto
@@ -148,6 +149,8 @@
       </form>
     </article>
   </dialog>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
   <script src="/app.js"></script>
 </body>

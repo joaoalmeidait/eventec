@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public record EventDetailsDTO(
         UUID id, String title, String description, Date date, String city,
-        String uf, String eventUrl, String imgUrl, List<CouponDTO> coupons) {
+        String uf, String eventUrl, String imgUrl, Boolean remote, List<CouponDTO> coupons) {
 
     public record CouponDTO(
             String code,

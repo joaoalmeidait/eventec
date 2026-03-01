@@ -1,6 +1,7 @@
 package com.eventostec.api.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.eventostec.api.domain.address.Address;
 import com.eventostec.api.domain.coupon.Coupon;
 import com.eventostec.api.domain.event.Event;
 import com.eventostec.api.domain.event.EventDetailsDTO;
@@ -46,6 +47,8 @@ public class EventService {
 
         if (data.image() != null){
             imgUrl = this.uploadImg(data.image());
+        }else {
+            imgUrl = "https://joaoalmeidait-eventostec-imagens.s3.amazonaws.com/ef49098c-fd23-4ed3-8c3a-cac4d3ee7418-SCR-20260301-qclj.png";
         }
 
         Event newEvent = new Event(
@@ -132,14 +135,23 @@ public class EventService {
                         coupon.getValid()
                 )).toList();
 
+        String city = null;
+        String uf = null;
+
+        if (!event.isRemote() && event.getAddress() != null) {
+            city = event.getAddress().getCity();
+            uf = event.getAddress().getUf();
+        }
+
         return new EventDetailsDTO(event.getId(),
                 event.getTitle(),
                 event.getDescription(),
                 event.getDate(),
-                event.getAddress().getCity(),
-                event.getAddress().getUf(),
+                city,
+                uf,
                 event.getEventUrl(),
                 event.getImgUrl(),
+                event.isRemote(),
                 couponDTOs
                 );
     }

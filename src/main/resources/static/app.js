@@ -25,10 +25,13 @@ const elements = {
   createModal: document.getElementById("createModal"),
   closeCreateModal: document.getElementById("closeCreateModal"),
   createEventForm: document.getElementById("createEventForm"),
+  toast: document.getElementById("toast"),
   createRemote: document.getElementById("createRemote"),
   createCity: document.getElementById("createCity"),
   createUf: document.getElementById("createUf")
 };
+
+let toastTimer = null;
 
 function getApiUrl(path, params = {}) {
   const base = window.location.origin;
@@ -145,6 +148,27 @@ function setStatus(message, isError = false) {
   elements.statusLine.style.color = isError ? "#9f1f1f" : "#345174";
 }
 
+function showToast(message, isError = false, durationMs = 2800) {
+  if (toastTimer) {
+    clearTimeout(toastTimer);
+  }
+
+  elements.toast.textContent = message;
+  elements.toast.classList.remove("hidden");
+  elements.toast.classList.toggle("error", isError);
+
+  // Force reflow for re-triggering transition between rapid toasts.
+  void elements.toast.offsetWidth;
+  elements.toast.classList.add("show");
+
+  toastTimer = setTimeout(() => {
+    elements.toast.classList.remove("show");
+    setTimeout(() => {
+      elements.toast.classList.add("hidden");
+    }, 180);
+  }, durationMs);
+}
+
 async function loadEvents() {
   setStatus("Carregando eventos...");
   try {
@@ -225,7 +249,7 @@ async function createEvent(event) {
   try {
     const timestamp = new Date(document.getElementById("createDate").value).getTime();
     if (Number.isNaN(timestamp)) {
-      setStatus("Data invalida para criacao do evento.", true);
+      showToast("Data invalida para criacao do evento.", true);
       return;
     }
 
@@ -244,23 +268,19 @@ async function createEvent(event) {
       formData.append("image", imageInput.files[0]);
     }
 
-    const createdEvent = await request(getApiUrl("/api/event"), {
+    await request(getApiUrl("/api/event"), {
       method: "POST",
       body: formData
     });
 
-    setStatus("Evento criado com sucesso.");
     elements.createEventForm.reset();
     toggleAddressInputs();
     elements.createModal.close();
+    showToast("Evento criado com sucesso.");
     state.page = 0;
     await loadEvents();
-
-    if (createdEvent && createdEvent.id) {
-      await openDetails(createdEvent.id);
-    }
   } catch (error) {
-    setStatus("Falha ao criar evento. Revise os campos e tente novamente.", true);
+    showToast("Falha ao criar evento. Revise os campos e tente novamente.", true, 3400);
     console.error(error);
   }
 }
